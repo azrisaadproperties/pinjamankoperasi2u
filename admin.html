@@ -42,7 +42,7 @@
             line-height: 1.5;
         }
 
-        /* PIN Login Modal */
+        /* Login Modal */
         #login-modal {
             position: fixed;
             top: 0;
@@ -63,7 +63,7 @@
             border-radius: 20px;
             padding: 40px;
             width: 100%;
-            max-width: 400px;
+            max-width: 420px;
             text-align: center;
             box-shadow: 0 20px 50px rgba(0,0,0,0.5);
         }
@@ -75,7 +75,7 @@
         }
 
         .login-box h2 {
-            font-size: 1.5rem;
+            font-size: 1.6rem;
             margin-bottom: 8px;
             font-weight: 800;
         }
@@ -86,21 +86,32 @@
             margin-bottom: 25px;
         }
 
-        .pin-input {
+        .form-group-admin {
+            margin-bottom: 18px;
+            text-align: left;
+        }
+
+        .form-group-admin label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: 700;
+            font-size: 0.85rem;
+            color: var(--text-sub);
+        }
+
+        .admin-input {
             width: 100%;
-            padding: 16px;
-            border-radius: 12px;
+            padding: 14px 16px;
+            border-radius: 10px;
             border: 2px solid var(--border-dark);
             background: #0f172a;
             color: #ffffff;
-            font-size: 1.5rem;
-            text-align: center;
-            letter-spacing: 8px;
+            font-size: 1rem;
             outline: none;
-            margin-bottom: 20px;
+            transition: var(--transition);
         }
 
-        .pin-input:focus {
+        .admin-input:focus {
             border-color: var(--accent-gold);
         }
 
@@ -115,6 +126,7 @@
             border: none;
             cursor: pointer;
             transition: var(--transition);
+            margin-top: 10px;
         }
 
         .btn-login:hover {
@@ -148,10 +160,20 @@
             font-size: 1.6rem;
         }
 
-        .admin-actions {
+        .admin-user-info {
             display: flex;
-            gap: 12px;
             align-items: center;
+            gap: 15px;
+        }
+
+        .user-tag {
+            background: rgba(251, 191, 36, 0.15);
+            color: var(--accent-gold);
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            border: 1px solid rgba(251, 191, 36, 0.3);
         }
 
         .btn-logout {
@@ -223,19 +245,20 @@
         /* Tabs Switcher */
         .admin-tabs {
             display: flex;
-            gap: 15px;
+            gap: 12px;
             margin-bottom: 25px;
             border-bottom: 1px solid var(--border-dark);
             padding-bottom: 15px;
+            flex-wrap: wrap;
         }
 
         .tab-btn {
             background: transparent;
             color: var(--text-sub);
             border: none;
-            padding: 10px 22px;
+            padding: 10px 20px;
             border-radius: 30px;
-            font-size: 1rem;
+            font-size: 0.95rem;
             font-weight: 700;
             cursor: pointer;
             transition: var(--transition);
@@ -354,19 +377,6 @@
             cursor: pointer;
         }
 
-        .status-badge {
-            display: inline-block;
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 0.78rem;
-            font-weight: 700;
-        }
-
-        .status-baru { background: rgba(56, 189, 248, 0.2); color: var(--accent-blue); }
-        .status-proses { background: rgba(251, 191, 36, 0.2); color: var(--accent-gold); }
-        .status-lulus { background: rgba(74, 222, 128, 0.2); color: var(--accent-green); }
-        .status-batal { background: rgba(248, 113, 113, 0.2); color: var(--accent-red); }
-
         .btn-wa-direct {
             background: #25D366;
             color: white;
@@ -391,6 +401,42 @@
             cursor: pointer;
         }
 
+        .btn-delete-admin {
+            background: rgba(248, 113, 113, 0.15);
+            color: var(--accent-red);
+            border: 1px solid rgba(248, 113, 113, 0.3);
+            padding: 5px 12px;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        /* Form Box for Adding Admin */
+        .add-admin-card {
+            background: var(--card-dark);
+            border: 1px solid var(--border-dark);
+            border-radius: var(--border-radius);
+            padding: 25px;
+            margin-bottom: 30px;
+        }
+
+        .add-admin-card h3 {
+            font-size: 1.2rem;
+            color: var(--accent-gold);
+            margin-bottom: 15px;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .form-row-admin {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
         @media (max-width: 768px) {
             .admin-header { padding: 15px; }
             .metrics-grid { grid-template-columns: 1fr 1fr; }
@@ -402,18 +448,28 @@
 </head>
 <body>
 
-    <!-- PIN Protection Modal -->
+    <!-- PIN & Username Login Modal -->
     <div id="login-modal">
         <div class="login-box">
             <i class="fas fa-user-shield"></i>
-            <h2>Admin Dashboard</h2>
-            <p>Masukkan Kunci PIN Keselamatan HQ</p>
-            <input type="password" id="pin-input" class="pin-input" placeholder="••••" maxlength="6" autofocus onkeyup="if(event.key==='Enter') verifyPin()">
-            <button type="button" class="btn-login" onclick="verifyPin()">
-                <i class="fas fa-lock-open"></i> Log Masuk
+            <h2>HQ Admin Login</h2>
+            <p>Masukkan Nama Pengguna & PIN Keselamatan</p>
+
+            <div class="form-group-admin">
+                <label>Nama Pengguna (Username)</label>
+                <input type="text" id="login-user" class="admin-input" placeholder="Contoh: admin atau kawan">
+            </div>
+
+            <div class="form-group-admin">
+                <label>Kunci PIN Keselamatan</label>
+                <input type="password" id="login-pin" class="admin-input" placeholder="Contoh: 8888" maxlength="6" onkeyup="if(event.key==='Enter') verifyAdminLogin()">
+            </div>
+
+            <button type="button" class="btn-login" id="btn-login-submit" onclick="verifyAdminLogin()">
+                <i class="fas fa-lock-open"></i> Log Masuk Dashboard
             </button>
             <div id="login-err" style="color: #f87171; margin-top: 15px; font-size: 0.85rem; display: none; font-weight: 700;">
-                <i class="fas fa-exclamation-circle"></i> Kunci PIN salah! Sila cuba lagi.
+                <i class="fas fa-exclamation-circle"></i> Username atau PIN salah! Sila cuba lagi.
             </div>
         </div>
     </div>
@@ -424,7 +480,8 @@
             <i class="fas fa-shield-halved"></i>
             <span>PinjamanKoperasi2U HQ</span>
         </div>
-        <div class="admin-actions">
+        <div class="admin-user-info">
+            <span class="user-tag" id="current-user-tag"><i class="fas fa-user-check"></i> <span id="logged-admin-name">Admin</span></span>
             <button class="btn-logout" onclick="logout()">
                 <i class="fas fa-right-from-bracket"></i> Keluar
             </button>
@@ -484,6 +541,9 @@
             </button>
             <button type="button" class="tab-btn" id="tab-agents" onclick="switchAdminTab('agents')">
                 <i class="fas fa-users-gear"></i> Pengurusan Ejen & Akaun Bank
+            </button>
+            <button type="button" class="tab-btn" id="tab-users" onclick="switchAdminTab('users')">
+                <i class="fas fa-user-shield"></i> Pengurusan Akaun Admin
             </button>
         </div>
 
@@ -564,6 +624,68 @@
             </div>
         </div>
 
+        <!-- TAB 3: ADMIN USERS MANAGEMENT -->
+        <div id="view-users" style="display: none;">
+            
+            <!-- Form: Add New Admin -->
+            <div class="add-admin-card">
+                <h3><i class="fas fa-user-plus"></i> Tambah Pengguna Admin Baru</h3>
+                <form id="form-add-admin">
+                    <div class="form-row-admin">
+                        <div class="form-group-admin">
+                            <label>Nama Admin (Nama Penuh)</label>
+                            <input type="text" id="new-admin-nama" required class="admin-input" placeholder="Contoh: Siti Aminah">
+                        </div>
+                        <div class="form-group-admin">
+                            <label>Nama Pengguna (Username)</label>
+                            <input type="text" id="new-admin-username" required class="admin-input" placeholder="Contoh: siti1">
+                        </div>
+                        <div class="form-group-admin">
+                            <label>Kunci PIN (4-6 Angka)</label>
+                            <input type="password" id="new-admin-pin" required class="admin-input" placeholder="Contoh: 5555" maxlength="6">
+                        </div>
+                        <div class="form-group-admin">
+                            <label>Peranan (Role)</label>
+                            <select id="new-admin-role" class="admin-input">
+                                <option value="Admin">Admin</option>
+                                <option value="Super Admin">Super Admin</option>
+                            </select>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn-login" style="width: auto; padding: 12px 25px;">
+                        <i class="fas fa-plus-circle"></i> Cipta Akaun Admin
+                    </button>
+                    <div id="add-admin-msg" style="margin-top: 10px; font-weight: 700; display: none;"></div>
+                </form>
+            </div>
+
+            <!-- Table: Admins List -->
+            <div class="table-card">
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Nama Admin</th>
+                                <th>Username</th>
+                                <th>Kunci PIN</th>
+                                <th>Peranan (Role)</th>
+                                <th>Tarikh Dicipta</th>
+                                <th>Tindakan Padam</th>
+                            </tr>
+                        </thead>
+                        <tbody id="admin-users-table-body">
+                            <tr>
+                                <td colspan="7" style="text-align: center; color: #94a3b8; padding: 30px;">
+                                    <i class="fas fa-spinner fa-spin"></i> Memuatkan senarai admin...
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
     </div>
 
     <!-- Admin JavaScript Logic -->
@@ -572,51 +694,101 @@
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im95eW5zc25sbmZvd2NpaHJqcm96Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODY3MDY4ODcsImV4cCI6MjEwMjI4Mjg4N30.VmWJAVcdlGG-aq7iSszWMiW-c1B7e5AI5ew4CRkVwFs';
         const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-        const HQ_PIN = '8888'; // Default HQ PIN
-
         let rawLeads = [];
         let rawAgents = [];
+        let rawAdminUsers = [];
 
         // Check persistent auth
-        if (localStorage.getItem('pk2u_admin_authed') === 'true') {
+        const storedAdmin = localStorage.getItem('pk2u_admin_user');
+        if (storedAdmin) {
             document.getElementById('login-modal').style.display = 'none';
+            document.getElementById('logged-admin-name').innerText = storedAdmin;
             loadAllData();
         }
 
-        function verifyPin() {
-            const inputVal = document.getElementById('pin-input').value.trim();
+        async function verifyAdminLogin() {
+            const userVal = document.getElementById('login-user').value.trim().toLowerCase();
+            const pinVal = document.getElementById('login-pin').value.trim();
             const errBox = document.getElementById('login-err');
+            const btnSubmit = document.getElementById('btn-login-submit');
 
-            if (inputVal === HQ_PIN) {
-                localStorage.setItem('pk2u_admin_authed', 'true');
-                document.getElementById('login-modal').style.display = 'none';
-                loadAllData();
-            } else {
+            if (!userVal || !pinVal) {
+                alert('Sila masukkan Username dan PIN.');
+                return;
+            }
+
+            btnSubmit.disabled = true;
+            btnSubmit.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Memverifikasi...';
+            errBox.style.display = 'none';
+
+            try {
+                // Fallback for hardcoded admin/8888
+                if (userVal === 'admin' && pinVal === '8888') {
+                    loginSuccess('HQ Super Admin');
+                    return;
+                }
+
+                const { data, error } = await supabaseClient
+                    .from('admins')
+                    .select('*')
+                    .ilike('username', userVal)
+                    .eq('pin', pinVal)
+                    .single();
+
+                if (data) {
+                    loginSuccess(data.nama_admin || data.username);
+                } else {
+                    errBox.style.display = 'block';
+                }
+
+            } catch (err) {
+                console.error('Login Error:', err);
                 errBox.style.display = 'block';
+            } finally {
+                btnSubmit.disabled = false;
+                btnSubmit.innerHTML = '<i class="fas fa-lock-open"></i> Log Masuk Dashboard';
             }
         }
 
+        function loginSuccess(adminName) {
+            localStorage.setItem('pk2u_admin_user', adminName);
+            document.getElementById('login-modal').style.display = 'none';
+            document.getElementById('logged-admin-name').innerText = adminName;
+            loadAllData();
+        }
+
         function logout() {
-            localStorage.removeItem('pk2u_admin_authed');
+            localStorage.removeItem('pk2u_admin_user');
             location.reload();
         }
 
         function switchAdminTab(tabName) {
             const btnLeads = document.getElementById('tab-leads');
             const btnAgents = document.getElementById('tab-agents');
+            const btnUsers = document.getElementById('tab-users');
+            
             const viewLeads = document.getElementById('view-leads');
             const viewAgents = document.getElementById('view-agents');
+            const viewUsers = document.getElementById('view-users');
+
+            btnLeads.classList.remove('active');
+            btnAgents.classList.remove('active');
+            btnUsers.classList.remove('active');
+            
+            viewLeads.style.display = 'none';
+            viewAgents.style.display = 'none';
+            viewUsers.style.display = 'none';
 
             if (tabName === 'leads') {
                 btnLeads.classList.add('active');
-                btnAgents.classList.remove('active');
                 viewLeads.style.display = 'block';
-                viewAgents.style.display = 'none';
-            } else {
+            } else if (tabName === 'agents') {
                 btnAgents.classList.add('active');
-                btnLeads.classList.remove('active');
                 viewAgents.style.display = 'block';
-                viewLeads.style.display = 'none';
+            } else if (tabName === 'users') {
+                btnUsers.classList.add('active');
+                viewUsers.style.display = 'block';
+                fetchAdminUsers();
             }
         }
 
@@ -656,6 +828,23 @@
 
             } catch (err) {
                 console.error('Fetch Agents Error:', err);
+            }
+        }
+
+        async function fetchAdminUsers() {
+            try {
+                const { data, error } = await supabaseClient
+                    .from('admins')
+                    .select('*')
+                    .order('id', { ascending: true });
+
+                if (error) throw error;
+
+                rawAdminUsers = data || [];
+                renderAdminUsersTable(rawAdminUsers);
+
+            } catch (err) {
+                console.error('Fetch Admins Error:', err);
             }
         }
 
@@ -722,7 +911,6 @@
 
                 if (error) throw error;
 
-                // Update local memory & metrics
                 const found = rawLeads.find(l => l.id === id);
                 if (found) found.status = newStatus;
                 updateMetrics();
@@ -792,6 +980,91 @@
                 (a.nama_bank && a.nama_bank.toLowerCase().includes(query))
             );
             renderAgentsTable(filtered);
+        }
+
+        function renderAdminUsersTable(data) {
+            const tbody = document.getElementById('admin-users-table-body');
+            if (!data || data.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="7" style="text-align:center; color:#94a3b8; padding:30px;">Tiada pengguna admin dijumpai.</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = '';
+            data.forEach(user => {
+                const dateStr = user.created_at ? new Date(user.created_at).toLocaleDateString('ms-MY', { day: 'numeric', month: 'short', year: 'numeric' }) : '-';
+                
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${user.id}</td>
+                    <td><strong>${user.nama_admin || '-'}</strong></td>
+                    <td><span style="color:#fbbf24; font-weight:700;">${user.username}</span></td>
+                    <td><span style="font-family:monospace; color:#38bdf8;">•••• (${user.pin})</span></td>
+                    <td><span style="background:rgba(56,189,248,0.15); color:#38bdf8; padding:3px 10px; border-radius:12px; font-size:0.78rem; font-weight:700;">${user.role || 'Admin'}</span></td>
+                    <td style="color:#94a3b8; font-size:0.85rem;">${dateStr}</td>
+                    <td>
+                        <button class="btn-delete-admin" onclick="deleteAdminUser(${user.id}, '${user.username}')">
+                            <i class="fas fa-trash"></i> Padam
+                        </button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        // Add Admin Form Submit
+        document.getElementById('form-add-admin').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const msgBox = document.getElementById('add-admin-msg');
+            msgBox.style.display = 'none';
+
+            const nama_admin = document.getElementById('new-admin-nama').value.trim();
+            const username = document.getElementById('new-admin-username').value.trim().toLowerCase();
+            const pin = document.getElementById('new-admin-pin').value.trim();
+            const role = document.getElementById('new-admin-role').value;
+
+            try {
+                const { data, error } = await supabaseClient
+                    .from('admins')
+                    .insert([{ nama_admin, username, pin, role }]);
+
+                if (error) {
+                    if (error.code === '23505') throw new Error('Username ini sudah wujud! Sila guna username lain.');
+                    throw error;
+                }
+
+                msgBox.style.color = '#4ade80';
+                msgBox.innerHTML = '<i class="fas fa-check-circle"></i> Akaun Admin Berjaya Dicipta!';
+                msgBox.style.display = 'block';
+
+                document.getElementById('form-add-admin').reset();
+                fetchAdminUsers();
+
+            } catch (err) {
+                console.error('Add Admin Error:', err);
+                msgBox.style.color = '#f87171';
+                msgBox.innerHTML = `<i class="fas fa-exclamation-triangle"></i> ${err.message || 'Ralat mencipta admin.'}`;
+                msgBox.style.display = 'block';
+            }
+        });
+
+        async function deleteAdminUser(id, username) {
+            if (!confirm(`Adakah anda pasti mahu memadam akaun admin (${username})?`)) return;
+
+            try {
+                const { error } = await supabaseClient
+                    .from('admins')
+                    .delete()
+                    .eq('id', id);
+
+                if (error) throw error;
+
+                fetchAdminUsers();
+                alert(`Akaun admin (${username}) berjaya dipadam.`);
+
+            } catch (err) {
+                console.error('Delete Admin Error:', err);
+                alert('Gagal memadam akaun admin.');
+            }
         }
 
         function copyBankAcc(accNo) {
