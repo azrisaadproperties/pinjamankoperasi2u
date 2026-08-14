@@ -495,6 +495,84 @@
             }
         }
 
+        /* Social Proof Toast Popup */
+        .social-proof-toast {
+            position: fixed;
+            bottom: 25px;
+            left: 25px;
+            background: #ffffff;
+            border-left: 4px solid var(--whatsapp-color);
+            box-shadow: 0 12px 35px rgba(0,0,0,0.18);
+            border-radius: 14px;
+            padding: 14px 18px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            z-index: 999;
+            transform: translateY(120px);
+            opacity: 0;
+            transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            max-width: 380px;
+            border-top: 1px solid #f1f5f9;
+            border-right: 1px solid #f1f5f9;
+            border-bottom: 1px solid #f1f5f9;
+        }
+
+        .social-proof-toast.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .social-proof-avatar {
+            width: 44px;
+            height: 44px;
+            background: linear-gradient(135deg, #0f172a, #1e293b);
+            color: var(--accent-color);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            flex-shrink: 0;
+        }
+
+        .social-proof-content {
+            font-size: 0.88rem;
+            color: #334155;
+            line-height: 1.4;
+            padding-right: 10px;
+        }
+
+        .social-proof-content strong {
+            color: #0f172a;
+            font-size: 0.95rem;
+        }
+
+        .social-proof-time {
+            font-size: 0.75rem;
+            color: #64748b;
+            margin-top: 4px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .social-proof-close {
+            position: absolute;
+            top: 6px;
+            right: 10px;
+            background: none;
+            border: none;
+            color: #94a3b8;
+            font-size: 1rem;
+            cursor: pointer;
+            line-height: 1;
+        }
+
+        .social-proof-close:hover {
+            color: #334155;
+        }
+
         /* Responsive Design */
         @media (max-width: 768px) {
             .hero h1 { font-size: 2.5rem; }
@@ -510,6 +588,12 @@
             }
             .whatsapp-float span { display: none; }
             .whatsapp-float i { margin: 0; font-size: 1.8rem; }
+            .social-proof-toast {
+                bottom: 85px;
+                left: 15px;
+                right: 15px;
+                max-width: calc(100% - 30px);
+            }
         }
     </style>
 
@@ -700,7 +784,22 @@
         <span>Hubungi Kami</span>
     </a>
 
-    <!-- Supabase Form Submission Script -->
+    <!-- Social Proof Toast Notification Component -->
+    <div id="social-proof-toast" class="social-proof-toast">
+        <button class="social-proof-close" onclick="hideToast()">&times;</button>
+        <div class="social-proof-avatar">
+            <i class="fas fa-check-circle"></i>
+        </div>
+        <div class="social-proof-content">
+            <strong id="sp-name">Permohonan Baru</strong><br>
+            Mohon pinjaman <span id="sp-amount" style="color: #16a34a; font-weight: 700;">RM 30,000</span>
+            <div class="social-proof-time">
+                <i class="fas fa-clock"></i> <span id="sp-time">1 minit lepas</span> • <span style="color: #25D366; font-weight: 600;">Terverifikasi</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Supabase Form Submission & Social Proof Script -->
     <script>
         const SUPABASE_URL = 'https://oyynssnlnfowcihrjroz.supabase.co';
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im95eW5zc25sbmZvd2NpaHJqcm96Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODY3MDY4ODcsImV4cCI6MjEwMjI4Mjg4N30.VmWJAVcdlGG-aq7iSszWMiW-c1B7e5AI5ew4CRkVwFs';
@@ -771,6 +870,73 @@
                 btnSubmit.disabled = false;
                 btnSubmit.innerHTML = '<i class="fas fa-paper-plane"></i> Hantar & Semak Kelayakan';
             }
+        });
+
+        // Social Proof Toast Notification System
+        let realLeads = [];
+        const fallbackLeads = [
+            { name: "Ahmad Razali (Putrajaya)", amount: "RM 35,000", time: "2 minit lepas" },
+            { name: "Siti Nurul (Kuantan)", amount: "RM 20,000", time: "4 minit lepas" },
+            { name: "Mohd Hafiz (Shah Alam)", amount: "RM 50,000", time: "7 minit lepas" },
+            { name: "Noraini M. (Kuala Lumpur)", amount: "RM 15,000", time: "11 minit lepas" },
+            { name: "Khairul Azman (Melaka)", amount: "RM 40,000", time: "15 minit lepas" },
+            { name: "Farah Diana (Johor Bahru)", amount: "RM 25,000", time: "18 minit lepas" },
+            { name: "Zulkifli B. (Kota Bharu)", amount: "RM 30,000", time: "22 minit lepas" }
+        ];
+        
+        let leadIndex = 0;
+
+        async function fetchRealLeads() {
+            try {
+                const { data, error } = await supabaseClient
+                    .from('permohonan')
+                    .select('nama, jumlah_pinjaman, created_at')
+                    .order('id', { ascending: false })
+                    .limit(10);
+                
+                if (data && data.length > 0) {
+                    realLeads = data.map(item => {
+                        const firstName = item.nama ? item.nama.split(' ')[0] + ' ' + (item.nama.split(' ')[1] ? item.nama.split(' ')[1][0] + '.' : '') : 'Pelanggan';
+                        return {
+                            name: `${firstName} (Kakitangan Kerajaan/GLC)`,
+                            amount: item.jumlah_pinjaman ? `RM ${Number(item.jumlah_pinjaman).toLocaleString()}` : 'RM 25,000',
+                            time: 'Baru sahaja'
+                        };
+                    });
+                }
+            } catch (e) {
+                console.log('Using default social proof dataset');
+            }
+        }
+
+        function showNextToast() {
+            const toast = document.getElementById('social-proof-toast');
+            if (!toast) return;
+
+            const allLeads = realLeads.length > 0 ? [...realLeads, ...fallbackLeads] : fallbackLeads;
+            const current = allLeads[leadIndex % allLeads.length];
+            leadIndex++;
+
+            document.getElementById('sp-name').innerText = current.name;
+            document.getElementById('sp-amount').innerText = current.amount;
+            document.getElementById('sp-time').innerText = current.time;
+
+            toast.classList.add('show');
+
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 4500);
+        }
+
+        function hideToast() {
+            const toast = document.getElementById('social-proof-toast');
+            if (toast) toast.classList.remove('show');
+        }
+
+        // Start social proof notification loop
+        fetchRealLeads().then(() => {
+            setTimeout(showNextToast, 3000);
+            setInterval(showNextToast, 11000);
         });
     </script>
 
