@@ -736,16 +736,31 @@
 
                 if (error) throw error;
 
-                msgBox.style.color = '#16a34a';
-                msgBox.innerHTML = '<i class="fas fa-check-circle"></i> Permohonan berjaya dihantar! Kami akan menghubungi anda melalui WhatsApp sebentar lagi.';
+                const waUrl = `https://wa.me/60175053408?text=${encodeURIComponent(
+                    `Hai PinjamanKoperasi2U, saya ${nama} baru sahaja hantar semakan kelayakan.\n\n` +
+                    `📌 Nama: ${nama}\n` +
+                    `📞 No Tel: ${no_telefon}\n` +
+                    `💵 Gaji Pokok: RM${gaji_pokok || '-'}\n` +
+                    `💰 Jumlah Pinjaman: RM${jumlah_pinjaman || '-'}`
+                )}`;
+
+                msgBox.innerHTML = `
+                    <div style="background: #f0fdf4; border: 1px solid #bbf7d0; padding: 18px; border-radius: 12px; margin-top: 15px; color: #15803d;">
+                        <i class="fas fa-check-circle" style="font-size: 2rem; color: #16a34a; margin-bottom: 10px;"></i>
+                        <h4 style="font-size: 1.2rem; margin-bottom: 6px; color: #166534;">Permohonan Berjaya Dihantar!</h4>
+                        <p style="font-size: 0.95rem; margin-bottom: 15px; color: #15803d;">Membuka WhatsApp anda secara automatik...</p>
+                        <a href="${waUrl}" class="btn btn-whatsapp" style="display: flex; width: 100%; justify-content: center; align-items: center; gap: 10px; padding: 14px 20px; font-size: 1.05rem; text-decoration: none;">
+                            <i class="fab fa-whatsapp" style="font-size: 1.4rem;"></i> Klik Sini Untuk Buka WhatsApp
+                        </a>
+                    </div>
+                `;
                 msgBox.style.display = 'block';
                 document.getElementById('permohonan-form').reset();
 
-                // Open WhatsApp with prefilled message after 1.5 seconds
+                // Direct auto-redirect to WhatsApp
                 setTimeout(() => {
-                    const waText = encodeURIComponent(`Hai PinjamanKoperasi2U, saya ${nama} baru sahaja hantar semakan kelayakan.\nNo Tel: ${no_telefon}\nGaji Pokok: RM${gaji_pokok || '-'}\nJumlah Pinjaman: RM${jumlah_pinjaman || '-'}`);
-                    window.open(`https://wa.me/60175053408?text=${waText}`, '_blank');
-                }, 1500);
+                    window.location.href = waUrl;
+                }, 1000);
 
             } catch (err) {
                 console.error('Supabase Error:', err);
