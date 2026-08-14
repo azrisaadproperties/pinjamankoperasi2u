@@ -871,6 +871,9 @@
                     <button type="button" class="ref-tab-btn" id="tab-btn-generator" onclick="switchRefTab('generator')">
                         <i class="fas fa-link"></i> Jana Pautan Ejen Sedia Ada
                     </button>
+                    <button type="button" class="ref-tab-btn" id="tab-btn-stats" onclick="switchRefTab('stats')">
+                        <i class="fas fa-chart-line"></i> Semak Leads Ejen Saya
+                    </button>
                 </div>
 
                 <!-- Tab 1: Registration Form -->
@@ -927,6 +930,37 @@
                             <button type="button" class="btn btn-primary" onclick="generateRefLink()">
                                 <i class="fas fa-link"></i> Jana Pautan
                             </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tab 3: Agent Stats & Leads Checker -->
+                <div id="ref-tab-stats" class="referral-form-box" style="display: none;">
+                    <div class="form-group">
+                        <label for="agent-stats-input" style="color: #a7f3d0;">Masukkan Kod Rujukan Ejen Anda</label>
+                        <div class="ref-input-group">
+                            <input type="text" id="agent-stats-input" placeholder="Contoh: YANA atau EJEN01">
+                            <button type="button" class="btn btn-primary" onclick="checkAgentStats()">
+                                <i class="fas fa-search"></i> Semak Leads Saya
+                            </button>
+                        </div>
+                    </div>
+                    <div id="agent-stats-result" style="display: none; margin-top: 20px;">
+                        <div style="background: rgba(2, 44, 34, 0.95); border: 2px solid #065f46; padding: 20px; border-radius: 12px;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #065f46; padding-bottom: 12px; margin-bottom: 15px;">
+                                <div>
+                                    <span style="color: #a7f3d0; font-size: 0.85rem;">Kod Ejen:</span>
+                                    <strong id="stats-code-display" style="color: #fbbf24; font-size: 1.1rem; display: block;">-</strong>
+                                </div>
+                                <div style="text-align: right;">
+                                    <span style="color: #a7f3d0; font-size: 0.85rem;">Jumlah Leads Masuk:</span>
+                                    <strong id="stats-count-display" style="color: #4ade80; font-size: 1.3rem; display: block;">0</strong>
+                                </div>
+                            </div>
+                            <h5 style="color: #a7f3d0; margin-bottom: 12px; font-size: 0.95rem;"><i class="fas fa-list-check"></i> Senarai Permohonan Diterima (Depan No. Tel Shown):</h5>
+                            <div id="stats-leads-list" style="max-height: 280px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px;">
+                                <!-- Dynamic leads rows -->
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -1091,22 +1125,93 @@
         function switchRefTab(tabName) {
             const btnReg = document.getElementById('tab-btn-register');
             const btnGen = document.getElementById('tab-btn-generator');
+            const btnStats = document.getElementById('tab-btn-stats');
             const tabReg = document.getElementById('ref-tab-register');
             const tabGen = document.getElementById('ref-tab-generator');
+            const tabStats = document.getElementById('ref-tab-stats');
             const resultBox = document.getElementById('ref-result-box');
+
+            btnReg.classList.remove('active');
+            btnGen.classList.remove('active');
+            btnStats.classList.remove('active');
+            tabReg.style.display = 'none';
+            tabGen.style.display = 'none';
+            tabStats.style.display = 'none';
 
             if (tabName === 'register') {
                 btnReg.classList.add('active');
-                btnGen.classList.remove('active');
                 tabReg.style.display = 'block';
-                tabGen.style.display = 'none';
-            } else {
+            } else if (tabName === 'generator') {
                 btnGen.classList.add('active');
-                btnReg.classList.remove('active');
                 tabGen.style.display = 'block';
-                tabReg.style.display = 'none';
+            } else if (tabName === 'stats') {
+                btnStats.classList.add('active');
+                tabStats.style.display = 'block';
             }
             resultBox.style.display = 'none';
+        }
+
+        // Agent Stats & Leads Checker Function
+        async function checkAgentStats() {
+            const inputCode = document.getElementById('agent-stats-input').value.trim().toUpperCase();
+            const resultBox = document.getElementById('agent-stats-result');
+            const codeDisplay = document.getElementById('stats-code-display');
+            const countDisplay = document.getElementById('stats-count-display');
+            const listContainer = document.getElementById('stats-leads-list');
+
+            if (!inputCode) {
+                alert('Sila masukkan Kod Rujukan Ejen anda.');
+                return;
+            }
+
+            try {
+                const { data, error } = await supabaseClient
+                    .from('permohonan')
+                    .select('nama, no_telefon, jumlah_pinjaman, created_at, status')
+                    .ilike('ref_code', inputCode)
+                    .order('id', { ascending: false });
+
+                if (error) throw error;
+
+                codeDisplay.innerText = inputCode;
+                countDisplay.innerText = data ? data.length : 0;
+                listContainer.innerHTML = '';
+
+                if (data && data.length > 0) {
+                    data.forEach(item => {
+                        const dateStr = item.created_at ? new Date(item.created_at).toLocaleDateString('ms-MY', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' }) : '-';
+                        const phone = item.no_telefon ? (item.no_telefon.substring(0, 4) + '****' + item.no_telefon.slice(-2)) : '01x-****';
+                        const name = item.nama ? (item.nama.split(' ')[0] + ' ' + (item.nama.split(' ')[1] ? item.nama.split(' ')[1][0] + '.' : '')) : 'Pemohon';
+                        const amount = item.jumlah_pinjaman ? `RM ${Number(item.jumlah_pinjaman).toLocaleString()}` : '-';
+
+                        const leadDiv = document.createElement('div');
+                        leadDiv.style.cssText = 'background: rgba(4, 78, 58, 0.6); padding: 12px 14px; border-radius: 8px; border: 1px solid #065f46; display: flex; justify-content: space-between; align-items: center; font-size: 0.88rem;';
+                        leadDiv.innerHTML = `
+                            <div>
+                                <strong style="color: #ffffff; font-size: 0.95rem;">${name}</strong>
+                                <div style="color: #a7f3d0; font-size: 0.8rem; margin-top: 2px;">
+                                    📞 ${phone} • 💰 ${amount}
+                                </div>
+                            </div>
+                            <div style="text-align: right;">
+                                <span style="background: rgba(245, 158, 11, 0.2); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.4); padding: 3px 8px; border-radius: 12px; font-size: 0.75rem; font-weight: 700;">
+                                    ${item.status || 'Baru'}
+                                </span>
+                                <div style="color: #6ee7b7; font-size: 0.75rem; margin-top: 4px;">${dateStr}</div>
+                            </div>
+                        `;
+                        listContainer.appendChild(leadDiv);
+                    });
+                } else {
+                    listContainer.innerHTML = '<div style="color: #a7f3d0; text-align: center; padding: 15px;">Belum ada permohonan yang direkodkan di bawah kod rujukan ini.</div>';
+                }
+
+                resultBox.style.display = 'block';
+
+            } catch (err) {
+                console.error('Check Stats Error:', err);
+                alert('Ralat menyemak statistik ejen. Sila semak semula kod anda.');
+            }
         }
 
         // Handle Affiliate Registration Form Submit
