@@ -573,6 +573,90 @@
             color: #334155;
         }
 
+        /* Referral System Section */
+        .referral-section {
+            padding: 70px 0;
+            background: #ffffff;
+        }
+
+        .referral-card {
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            border-radius: var(--border-radius);
+            padding: 50px 40px;
+            color: #ffffff;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.12);
+        }
+
+        .referral-header {
+            text-align: center;
+            max-width: 650px;
+            margin: 0 auto 30px;
+        }
+
+        .ref-badge {
+            display: inline-block;
+            background: rgba(251, 191, 36, 0.15);
+            color: var(--accent-color);
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+            border: 1px solid rgba(251, 191, 36, 0.3);
+        }
+
+        .referral-header h2 {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .referral-header p {
+            color: #cbd5e1;
+            font-size: 1rem;
+        }
+
+        .referral-form-box {
+            max-width: 550px;
+            margin: 0 auto;
+        }
+
+        .ref-input-group, .ref-copy-group {
+            display: flex;
+            gap: 10px;
+        }
+
+        .ref-input-group input, .ref-copy-group input {
+            flex: 1;
+            padding: 14px 16px;
+            border: 2px solid #334155;
+            background: #0f172a;
+            color: #ffffff;
+            border-radius: 8px;
+            font-size: 1rem;
+            outline: none;
+        }
+
+        .ref-input-group input:focus {
+            border-color: var(--accent-color);
+        }
+
+        .ref-banner-notice {
+            background: rgba(251, 191, 36, 0.12);
+            border: 1px solid rgba(251, 191, 36, 0.4);
+            color: #d97706;
+            padding: 10px 16px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
         /* Responsive Design */
         @media (max-width: 768px) {
             .hero h1 { font-size: 2.5rem; }
@@ -593,6 +677,12 @@
                 left: 15px;
                 right: 15px;
                 max-width: calc(100% - 30px);
+            }
+            .ref-input-group, .ref-copy-group {
+                flex-direction: column;
+            }
+            .referral-card {
+                padding: 30px 20px;
             }
         }
     </style>
@@ -652,6 +742,9 @@
                 <div class="form-header">
                     <h2>Semak Kelayakan Pinjaman Anda</h2>
                     <p>Isi maklumat di bawah. Data anda dilindungi & dihantar terus ke pangkalan data Supabase kami.</p>
+                </div>
+                <div id="ref-notice-banner" class="ref-banner-notice" style="display: none;">
+                    <i class="fas fa-user-check"></i> Permohonan melalui Rujukan Ejen: <span id="ref-notice-code"></span>
                 </div>
                 <form id="permohonan-form">
                     <div class="form-group">
@@ -759,6 +852,42 @@
         </div>
     </section>
 
+    <!-- Referral System Section -->
+    <section class="referral-section" id="program-rujukan">
+        <div class="container">
+            <div class="referral-card">
+                <div class="referral-header">
+                    <div class="ref-badge"><i class="fas fa-handshake"></i> Program Rujukan Introducer / Ejen</div>
+                    <h2>Jana Pautan Rujukan Anda</h2>
+                    <p>Kongsi pautan rujukan khas anda kepada prospek. Setiap permohonan yang dihantar akan didaftarkan di bawah kod rujukan anda secara automatik!</p>
+                </div>
+                <div class="referral-form-box">
+                    <div class="form-group">
+                        <label for="agent-code-input" style="color: #cbd5e1;">Masukkan Kod / Nama / No. Tel Ejen Anda</label>
+                        <div class="ref-input-group">
+                            <input type="text" id="agent-code-input" placeholder="Contoh: AZRI01 atau 0123456789">
+                            <button type="button" class="btn btn-primary" onclick="generateRefLink()">
+                                <i class="fas fa-link"></i> Jana Pautan
+                            </button>
+                        </div>
+                    </div>
+                    <div id="ref-result-box" style="display: none; margin-top: 20px;">
+                        <label style="color: #fbbf24; font-weight: 600; display: block; margin-bottom: 8px;">Pautan Rujukan Khas Anda:</label>
+                        <div class="ref-copy-group">
+                            <input type="text" id="ref-generated-url" readonly>
+                            <button type="button" class="btn btn-whatsapp" onclick="copyRefLink()">
+                                <i class="fas fa-copy"></i> Salin Pautan
+                            </button>
+                        </div>
+                        <div id="ref-copy-status" style="margin-top: 10px; font-size: 0.9rem; color: #4ade80; font-weight: 600; display: none;">
+                            <i class="fas fa-check-circle"></i> Pautan berjaya disalin! Anda boleh kongsikan sekarang.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <!-- Call to Action Section -->
     <section class="cta-section">
         <div class="container">
@@ -806,6 +935,24 @@
         
         const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
+        // Auto-detect and store Referral Code from URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const refParam = urlParams.get('ref');
+        if (refParam) {
+            localStorage.setItem('pk2u_ref_code', refParam.trim().toUpperCase());
+        }
+        const activeRefCode = localStorage.getItem('pk2u_ref_code') || '';
+
+        // Display referral notice if ref_code exists
+        if (activeRefCode) {
+            const banner = document.getElementById('ref-notice-banner');
+            const codeSpan = document.getElementById('ref-notice-code');
+            if (banner && codeSpan) {
+                codeSpan.innerText = activeRefCode;
+                banner.style.display = 'flex';
+            }
+        }
+
         document.getElementById('permohonan-form').addEventListener('submit', async (e) => {
             e.preventDefault();
             
@@ -829,18 +976,21 @@
                             nama: nama, 
                             no_telefon: no_telefon, 
                             gaji_pokok: gaji_pokok, 
-                            jumlah_pinjaman: jumlah_pinjaman 
+                            jumlah_pinjaman: jumlah_pinjaman,
+                            ref_code: activeRefCode || null
                         }
                     ]);
 
                 if (error) throw error;
 
+                const refMsgText = activeRefCode ? `\n🎗️ Kod Rujukan: ${activeRefCode}` : '';
                 const waUrl = `https://wa.me/60175053408?text=${encodeURIComponent(
                     `Hai PinjamanKoperasi2U, saya ${nama} baru sahaja hantar semakan kelayakan.\n\n` +
                     `📌 Nama: ${nama}\n` +
                     `📞 No Tel: ${no_telefon}\n` +
                     `💵 Gaji Pokok: RM${gaji_pokok || '-'}\n` +
-                    `💰 Jumlah Pinjaman: RM${jumlah_pinjaman || '-'}`
+                    `💰 Jumlah Pinjaman: RM${jumlah_pinjaman || '-'}` +
+                    refMsgText
                 )}`;
 
                 msgBox.innerHTML = `
@@ -871,6 +1021,41 @@
                 btnSubmit.innerHTML = '<i class="fas fa-paper-plane"></i> Hantar & Semak Kelayakan';
             }
         });
+
+        // Referral Link Generator Functions
+        function generateRefLink() {
+            const agentCodeInput = document.getElementById('agent-code-input').value.trim();
+            const resultBox = document.getElementById('ref-result-box');
+            const generatedUrlInput = document.getElementById('ref-generated-url');
+            
+            if (!agentCodeInput) {
+                alert('Sila masukkan Kod, Nama, atau No. Tel Ejen anda.');
+                return;
+            }
+
+            const sanitizedCode = encodeURIComponent(agentCodeInput.replace(/\s+/g, '').toUpperCase());
+            const baseUrl = window.location.origin + window.location.pathname;
+            const fullRefUrl = `${baseUrl}?ref=${sanitizedCode}`;
+
+            generatedUrlInput.value = fullRefUrl;
+            resultBox.style.display = 'block';
+        }
+
+        function copyRefLink() {
+            const generatedUrlInput = document.getElementById('ref-generated-url');
+            const statusMsg = document.getElementById('ref-copy-status');
+            
+            if (!generatedUrlInput.value) return;
+
+            generatedUrlInput.select();
+            generatedUrlInput.setSelectionRange(0, 99999);
+            navigator.clipboard.writeText(generatedUrlInput.value);
+
+            statusMsg.style.display = 'block';
+            setTimeout(() => {
+                statusMsg.style.display = 'none';
+            }, 3000);
+        }
 
         // Social Proof Toast Notification System
         let realLeads = [];
