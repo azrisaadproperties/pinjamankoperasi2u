@@ -368,6 +368,84 @@
             font-size: 0.9rem;
         }
 
+        /* Form Section */
+        .form-section {
+            padding: 80px 0;
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+        }
+        
+        .form-container {
+            max-width: 650px;
+            margin: 0 auto;
+            background: var(--white);
+            padding: 40px;
+            border-radius: var(--border-radius);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.08);
+            border: 1px solid #e2e8f0;
+        }
+
+        .form-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .form-header h2 {
+            font-size: 2rem;
+            color: var(--primary-color);
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .form-header p {
+            color: var(--text-light);
+            font-size: 1rem;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        @media (max-width: 600px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .form-group label, .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--primary-color);
+            font-size: 0.95rem;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid #cbd5e1;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: var(--transition);
+            outline: none;
+        }
+
+        .form-group input:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 4px rgba(15, 23, 42, 0.1);
+        }
+
+        .btn-block {
+            width: 100%;
+            display: block;
+            text-align: center;
+        }
+
         /* Floating WhatsApp Button with Pulse */
         .whatsapp-float {
             position: fixed;
@@ -444,6 +522,9 @@
 
       gtag('config', 'G-M9B559NRMC');
     </script>
+    
+    <!-- Supabase JS Client -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
 
@@ -455,8 +536,8 @@
                 <h1>Selesaikan Bebanan Kewangan Anda Dengan <span>Pinjaman Koperasi</span></h1>
                 <p>Khas untuk Kakitangan <strong>GOV & GLC</strong>. Pinjaman sehingga <strong>15 Tahun</strong>. CTOS, CCRIS & Blacklist 100% layak memohon!</p>
                 
-                <a href="https://wa.me/60175053408?text=Hai%20PinjamanKoperasi2U,%20saya%20berminat%20nak%20tahu%20lebih%20lanjut%20tentang%20pinjaman" class="btn btn-primary btn-whatsapp pulse-button" target="_blank">
-                    <i class="fab fa-whatsapp"></i> Semak Kelayakan Percuma
+                <a href="#semak-kelayakan" class="btn btn-primary pulse-button" style="padding: 16px 36px; font-size: 1.2rem;">
+                    <i class="fas fa-edit"></i> Semak Kelayakan Sekarang
                 </a>
 
                 <div class="hero-features">
@@ -473,6 +554,42 @@
             </div>
         </div>
     </header>
+
+    <!-- Form Section -->
+    <section class="form-section" id="semak-kelayakan">
+        <div class="container">
+            <div class="form-container">
+                <div class="form-header">
+                    <h2>Semak Kelayakan Pinjaman Anda</h2>
+                    <p>Isi maklumat di bawah. Data anda dilindungi & dihantar terus ke pangkalan data Supabase kami.</p>
+                </div>
+                <form id="permohonan-form">
+                    <div class="form-group">
+                        <label for="nama">Nama Penuh</label>
+                        <input type="text" id="nama" name="nama" required placeholder="Contoh: Ahmad bin Razali">
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <div class="form-label">No. Telefon (WhatsApp)</div>
+                            <input type="tel" id="no_telefon" name="no_telefon" required placeholder="Contoh: 0123456789">
+                        </div>
+                        <div class="form-group">
+                            <div class="form-label">Gaji Pokok (RM)</div>
+                            <input type="number" id="gaji_pokok" name="gaji_pokok" placeholder="Contoh: 3500">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="form-label">Jumlah Pinjaman Dipohon (RM)</div>
+                        <input type="number" id="jumlah_pinjaman" name="jumlah_pinjaman" placeholder="Contoh: 30000">
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-block" id="btn-submit">
+                        <i class="fas fa-paper-plane"></i> Hantar & Semak Kelayakan
+                    </button>
+                    <div id="form-message" style="margin-top: 15px; text-align: center; display: none; font-weight: 600;"></div>
+                </form>
+            </div>
+        </div>
+    </section>
 
     <!-- Features Section -->
     <section class="features" id="kelebihan">
@@ -566,5 +683,65 @@
         <span>Hubungi Kami</span>
     </a>
 
+    <!-- Supabase Form Submission Script -->
+    <script>
+        const SUPABASE_URL = 'https://oyynssnlnfowcihrjroz.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im95eW5zc25sbmZvd2NpaHJqcm96Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODY3MDY4ODcsImV4cCI6MjEwMjI4Mjg4N30.VmWJAVcdlGG-aq7iSszWMiW-c1B7e5AI5ew4CRkVwFs';
+        
+        const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        document.getElementById('permohonan-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const btnSubmit = document.getElementById('btn-submit');
+            const msgBox = document.getElementById('form-message');
+            
+            btnSubmit.disabled = true;
+            btnSubmit.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Memproses...';
+            msgBox.style.display = 'none';
+
+            const nama = document.getElementById('nama').value;
+            const no_telefon = document.getElementById('no_telefon').value;
+            const gaji_pokok = document.getElementById('gaji_pokok').value ? parseFloat(document.getElementById('gaji_pokok').value) : null;
+            const jumlah_pinjaman = document.getElementById('jumlah_pinjaman').value ? parseFloat(document.getElementById('jumlah_pinjaman').value) : null;
+
+            try {
+                const { data, error } = await supabaseClient
+                    .from('permohonan')
+                    .insert([
+                        { 
+                            nama: nama, 
+                            no_telefon: no_telefon, 
+                            gaji_pokok: gaji_pokok, 
+                            jumlah_pinjaman: jumlah_pinjaman 
+                        }
+                    ]);
+
+                if (error) throw error;
+
+                msgBox.style.color = '#16a34a';
+                msgBox.innerHTML = '<i class="fas fa-check-circle"></i> Permohonan berjaya dihantar! Kami akan menghubungi anda melalui WhatsApp sebentar lagi.';
+                msgBox.style.display = 'block';
+                document.getElementById('permohonan-form').reset();
+
+                // Open WhatsApp with prefilled message after 1.5 seconds
+                setTimeout(() => {
+                    const waText = encodeURIComponent(`Hai PinjamanKoperasi2U, saya ${nama} baru sahaja hantar semakan kelayakan.\nNo Tel: ${no_telefon}\nGaji Pokok: RM${gaji_pokok || '-'}\nJumlah Pinjaman: RM${jumlah_pinjaman || '-'}`);
+                    window.open(`https://wa.me/60175053408?text=${waText}`, '_blank');
+                }, 1500);
+
+            } catch (err) {
+                console.error('Supabase Error:', err);
+                msgBox.style.color = '#dc2626';
+                msgBox.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Ralat menghantar permohonan. Sila cuba lagi atau hubungi terus WhatsApp.';
+                msgBox.style.display = 'block';
+            } finally {
+                btnSubmit.disabled = false;
+                btnSubmit.innerHTML = '<i class="fas fa-paper-plane"></i> Hantar & Semak Kelayakan';
+            }
+        });
+    </script>
+
 </body>
 </html>
+
