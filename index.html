@@ -1075,6 +1075,22 @@
         }
         const activeRefCode = localStorage.getItem('pk2u_ref_code') || '';
 
+        // Auto-detect and store Traffic Source (UTM / src / Referrer)
+        const srcParam = urlParams.get('src') || urlParams.get('utm_source');
+        if (srcParam) {
+            localStorage.setItem('pk2u_traffic_src', srcParam.trim());
+        } else if (!localStorage.getItem('pk2u_traffic_src')) {
+            const ref = document.referrer.toLowerCase();
+            if (ref.includes('facebook') || ref.includes('fb.')) localStorage.setItem('pk2u_traffic_src', 'Facebook');
+            else if (ref.includes('instagram')) localStorage.setItem('pk2u_traffic_src', 'Instagram');
+            else if (ref.includes('tiktok')) localStorage.setItem('pk2u_traffic_src', 'TikTok');
+            else if (ref.includes('whatsapp') || ref.includes('wa.me')) localStorage.setItem('pk2u_traffic_src', 'WhatsApp');
+            else if (ref.includes('threads')) localStorage.setItem('pk2u_traffic_src', 'Threads');
+            else if (ref.includes('google')) localStorage.setItem('pk2u_traffic_src', 'Google');
+            else localStorage.setItem('pk2u_traffic_src', 'Direct / Web');
+        }
+        const activeTrafficSource = localStorage.getItem('pk2u_traffic_src') || 'Direct / Web';
+
         // Display referral notice if ref_code exists
         if (activeRefCode) {
             const banner = document.getElementById('ref-notice-banner');
@@ -1109,20 +1125,22 @@
                             no_telefon: no_telefon, 
                             gaji_pokok: gaji_pokok, 
                             jumlah_pinjaman: jumlah_pinjaman,
-                            ref_code: activeRefCode || null
+                            ref_code: activeRefCode || null,
+                            utm_source: activeTrafficSource
                         }
                     ]);
 
                 if (error) throw error;
 
                 const refMsgText = activeRefCode ? `\n🎗️ Kod Rujukan: ${activeRefCode}` : '';
+                const srcMsgText = `\n🌐 Sumber Traffic: ${activeTrafficSource}`;
                 const waUrl = `https://wa.me/60175053408?text=${encodeURIComponent(
                     `Hai PinjamanKoperasi2U, saya ${nama} baru sahaja hantar semakan kelayakan.\n\n` +
                     `📌 Nama: ${nama}\n` +
                     `📞 No Tel: ${no_telefon}\n` +
                     `💵 Gaji Pokok: RM${gaji_pokok || '-'}\n` +
                     `💰 Jumlah Pinjaman: RM${jumlah_pinjaman || '-'}` +
-                    refMsgText
+                    refMsgText + srcMsgText
                 )}`;
 
                 msgBox.innerHTML = `

@@ -570,6 +570,7 @@
                                 <th>Gaji Pokok</th>
                                 <th>Jumlah Pinjaman</th>
                                 <th>Kod Ejen</th>
+                                <th>Sumber Traffic</th>
                                 <th>Status Kes</th>
                                 <th>Tindakan Direct WA</th>
                             </tr>
@@ -862,7 +863,7 @@
         function renderLeadsTable(data) {
             const tbody = document.getElementById('leads-table-body');
             if (!data || data.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="8" style="text-align:center; color:#94a3b8; padding:30px;">Tiada data permohonan dijumpai.</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="9" style="text-align:center; color:#94a3b8; padding:30px;">Tiada data permohonan dijumpai.</td></tr>';
                 return;
             }
 
@@ -872,7 +873,8 @@
                 const gaji = item.gaji_pokok ? `RM ${Number(item.gaji_pokok).toLocaleString()}` : '-';
                 const jumlah = item.jumlah_pinjaman ? `RM ${Number(item.jumlah_pinjaman).toLocaleString()}` : '-';
                 const refCode = item.ref_code ? `<span style="color:#fbbf24; font-weight:700;">${item.ref_code}</span>` : '<span style="color:#64748b;">Direct</span>';
-                
+                const trafficSrc = item.utm_source ? `<span style="background:rgba(56,189,248,0.15); color:#38bdf8; padding:3px 8px; border-radius:10px; font-size:0.8rem; font-weight:700;">${item.utm_source}</span>` : '<span style="color:#64748b;">Direct / Web</span>';
+
                 const currentStatus = item.status || 'Baru';
                 const waUrl = `https://wa.me/${item.no_telefon ? item.no_telefon.replace(/[^0-9]/g, '') : ''}?text=${encodeURIComponent(`Hai ${item.nama || ''}, saya pegawai penasihat dari PinjamanKoperasi2U berkenaan permohonan semakan anda.`)}`;
 
@@ -884,6 +886,7 @@
                     <td>${gaji}</td>
                     <td style="color:#4ade80; font-weight:700;">${jumlah}</td>
                     <td>${refCode}</td>
+                    <td>${trafficSrc}</td>
                     <td>
                         <select class="status-select" onchange="updateLeadStatus(${item.id}, this.value)">
                             <option value="Baru" ${currentStatus==='Baru'?'selected':''}>Baru</option>
@@ -932,6 +935,7 @@
                 (l.nama && l.nama.toLowerCase().includes(query)) ||
                 (l.no_telefon && l.no_telefon.includes(query)) ||
                 (l.ref_code && l.ref_code.toLowerCase().includes(query)) ||
+                (l.utm_source && l.utm_source.toLowerCase().includes(query)) ||
                 (l.status && l.status.toLowerCase().includes(query))
             );
             renderLeadsTable(filtered);
@@ -1079,10 +1083,10 @@
                 return;
             }
 
-            let csvContent = "data:text/csv;charset=utf-8,ID,Tarikh,Nama,No Telefon,Gaji Pokok,Jumlah Pinjaman,Kod Ejen,Status\n";
+            let csvContent = "data:text/csv;charset=utf-8,ID,Tarikh,Nama,No Telefon,Gaji Pokok,Jumlah Pinjaman,Kod Ejen,Sumber Traffic,Status\n";
             rawLeads.forEach(l => {
                 const dateStr = l.created_at ? new Date(l.created_at).toISOString() : '';
-                csvContent += `"${l.id}","${dateStr}","${l.nama||''}","${l.no_telefon||''}","${l.gaji_pokok||''}","${l.jumlah_pinjaman||''}","${l.ref_code||''}","${l.status||'Baru'}"\n`;
+                csvContent += `"${l.id}","${dateStr}","${l.nama||''}","${l.no_telefon||''}","${l.gaji_pokok||''}","${l.jumlah_pinjaman||''}","${l.ref_code||''}","${l.utm_source||'Direct / Web'}","${l.status||'Baru'}"\n`;
             });
 
             const encodedUri = encodeURI(csvContent);
