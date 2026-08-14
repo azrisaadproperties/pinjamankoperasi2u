@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pinjaman Koperasi 2U - Kelulusan Pantas & Mudah</title>
+    <meta name="description" content="Pakar Perunding Pinjaman Koperasi. CTOS/CCRIS layak memohon. Proses pantas, kadar faedah rendah untuk Kakitangan Kerajaan dan GLC.">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        :root {
+            --primary-color: #0f172a; /* Slate 900 */
+            --primary-light: #1e293b; 
+            --accent-color: #fbbf24; /* Amber 400 */
+            --accent-hover: #f59e0b; /* Amber 500 */
+            --whatsapp-color: #25D366;
+            --text-main: #334155;
+            --text-light: #64748b;
+            --bg-light: #f8fafc;
+            --white: #ffffff;
+            --border-radius: 12px;
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-light);
+            color: var(--text-main);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Utility Classes */
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        .text-center { text-align: center; }
+        .mt-4 { margin-top: 1rem; }
+        .mb-2 { margin-bottom: 0.5rem; }
+        
+        /* Buttons */
+        .btn {
+            display: inline-block;
+            padding: 14px 28px;
+            border-radius: 30px;
+            font-weight: 700;
+            text-decoration: none;
+            transition: var(--transition);
+            cursor: pointer;
+            border: none;
+            font-size: 1.1rem;
+        }
+
+        .btn-primary {
+            background-color: var(--accent-color);
+            color: var(--primary-color);
+            box-shadow: 0 4px 15px rgba(251, 191, 36, 0.4);
+        }
+
+        .btn-primary:hover {
+            background-color: var(--accent-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(251, 191, 36, 0.6);
+        }
+
+        .btn-whatsapp {
+            background-color: var(--whatsapp-color);
+            color: var(--white);
+            box-shadow: 0 4px 15px rgba(37, 211, 102, 0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .btn-whatsapp:hover {
+            background-color: #1ebe57;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(37, 211, 102, 0.6);
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-light) 100%);
+            color: var(--white);
+            padding: 100px 0 80px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -20%;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(251, 191, 36, 0.1) 0%, transparent 70%);
+            border-radius: 50%;
+        }
+
+        .hero-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .badge {
+            background: rgba(251, 191, 36, 0.15);
+            color: var(--accent-color);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 24px;
+            border: 1px solid rgba(251, 191, 36, 0.3);
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            font-weight: 800;
+            line-height: 1.2;
+            margin-bottom: 24px;
+            max-width: 900px;
+        }
+
+        .hero h1 span {
+            color: var(--accent-color);
+        }
+
+        .hero p {
+            font-size: 1.25rem;
+            color: #cbd5e1;
+            margin-bottom: 40px;
+            max-width: 700px;
+        }
+
+        .hero-features {
+            display: flex;
+            gap: 30px;
+            margin-top: 40px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .hero-feature-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 600;
+            color: #f1f5f9;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 10px 20px;
+            border-radius: 30px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .hero-feature-item i {
+            color: var(--accent-color);
+        }
+
+        /* Features Section */
+        .features {
+            padding: 80px 0;
+            background-color: var(--white);
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .section-header h2 {
+            font-size: 2.5rem;
+            color: var(--primary-color);
+            font-weight: 700;
+            margin-bottom: 15px;
+        }
+
+        .section-header p {
+            color: var(--text-light);
+            font-size: 1.1rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        .feature-card {
+            background: var(--white);
+            padding: 40px 30px;
+            border-radius: var(--border-radius);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            text-align: center;
+            transition: var(--transition);
+            border: 1px solid #f1f5f9;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.08);
+            border-color: var(--accent-color);
+        }
+
+        .feature-icon {
+            width: 70px;
+            height: 70px;
+            background: rgba(15, 23, 42, 0.05);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            font-size: 1.8rem;
+            color: var(--primary-color);
+            transition: var(--transition);
+        }
+
+        .feature-card:hover .feature-icon {
+            background: var(--primary-color);
+            color: var(--accent-color);
+        }
+
+        .feature-card h3 {
+            font-size: 1.3rem;
+            color: var(--primary-color);
+            margin-bottom: 15px;
+        }
+
+        .feature-card p {
+            color: var(--text-light);
+            font-size: 0.95rem;
+        }
+
+        /* Eligibility Section */
+        .eligibility {
+            padding: 80px 0;
+            background-color: var(--bg-light);
+        }
+
+        .el-content {
+            display: flex;
+            align-items: center;
+            gap: 50px;
+            background: var(--white);
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.05);
+        }
+
+        .el-text {
+            padding: 50px;
+            flex: 1;
+        }
+
+        .el-text h2 {
+            font-size: 2.2rem;
+            color: var(--primary-color);
+            margin-bottom: 20px;
+        }
+        
+        .el-text p {
+            color: var(--text-light);
+            margin-bottom: 30px;
+        }
+
+        .checklist {
+            list-style: none;
+            margin-bottom: 40px;
+        }
+
+        .checklist li {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 15px;
+            font-size: 1.1rem;
+            color: var(--primary-color);
+            font-weight: 500;
+        }
+
+        .checklist li i {
+            color: var(--whatsapp-color);
+            font-size: 1.2rem;
+            background: rgba(37, 211, 102, 0.1);
+            padding: 5px;
+            border-radius: 50%;
+        }
+
+        .el-image {
+            flex: 1;
+            background: linear-gradient(45deg, var(--primary-color), #334155);
+            min-height: 500px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .el-image-inner {
+            text-align: center;
+            color: white;
+            padding: 40px;
+        }
+
+        .el-image-inner h3 {
+            font-size: 2.5rem;
+            color: var(--accent-color);
+            margin-bottom: 10px;
+        }
+
+        /* CTA Section */
+        .cta-section {
+            padding: 80px 0;
+            background: var(--primary-color);
+            color: white;
+            text-align: center;
+        }
+
+        .cta-section h2 {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+        }
+
+        .cta-section p {
+            font-size: 1.2rem;
+            color: #cbd5e1;
+            margin-bottom: 40px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Footer */
+        footer {
+            background: #0b1120;
+            color: #94a3b8;
+            padding: 40px 0 20px;
+            text-align: center;
+        }
+        
+        footer p {
+            margin-bottom: 10px;
+            font-size: 0.9rem;
+        }
+
+        /* Floating WhatsApp Button with Pulse */
+        .whatsapp-float {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background-color: var(--whatsapp-color);
+            color: #fff;
+            border-radius: 50px;
+            padding: 15px 25px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            box-shadow: 0 4px 15px rgba(37, 211, 102, 0.4);
+            z-index: 1000;
+            text-decoration: none;
+            animation: pulse 1.5s infinite;
+            transition: transform 0.3s ease;
+        }
+
+        .pulse-button {
+            animation: pulse 1.5s infinite;
+        }
+
+        .whatsapp-float i {
+            font-size: 1.5rem;
+        }
+
+        .whatsapp-float:hover, .pulse-button:hover {
+            transform: scale(1.05);
+            animation: none;
+        }
+
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.8);
+                transform: scale(1);
+            }
+            50% {
+                box-shadow: 0 0 0 25px rgba(37, 211, 102, 0);
+                transform: scale(1.03);
+            }
+            100% {
+                box-shadow: 0 0 0 0 rgba(37, 211, 102, 0);
+                transform: scale(1);
+            }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 2.5rem; }
+            .hero p { font-size: 1.1rem; }
+            .el-content { flex-direction: column; }
+            .el-image { min-height: 300px; width: 100%; }
+            .el-text { padding: 30px 20px; }
+            .whatsapp-float {
+                bottom: 20px;
+                right: 20px;
+                padding: 12px;
+                border-radius: 50%;
+            }
+            .whatsapp-float span { display: none; }
+            .whatsapp-float i { margin: 0; font-size: 1.8rem; }
+        }
+    </style>
+
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-M9B559NRMC"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-M9B559NRMC');
+    </script>
+</head>
+<body>
+
+    <!-- Hero Section -->
+    <header class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <div class="badge">Patuh Syariah • Tanpa Pengesahan Sign Majikan</div>
+                <h1>Selesaikan Bebanan Kewangan Anda Dengan <span>Pinjaman Koperasi</span></h1>
+                <p>Khas untuk Kakitangan <strong>GOV & GLC</strong>. Pinjaman sehingga <strong>15 Tahun</strong>. CTOS, CCRIS & Blacklist 100% layak memohon!</p>
+                
+                <a href="https://wa.me/60175053408?text=Hai%20PinjamanKoperasi2U,%20saya%20berminat%20nak%20tahu%20lebih%20lanjut%20tentang%20pinjaman" class="btn btn-primary btn-whatsapp pulse-button" target="_blank">
+                    <i class="fab fa-whatsapp"></i> Semak Kelayakan Percuma
+                </a>
+
+                <div class="hero-features">
+                    <div class="hero-feature-item">
+                        <i class="fas fa-check-circle"></i> CTOS/CCRIS Layak
+                    </div>
+                    <div class="hero-feature-item">
+                        <i class="fas fa-calendar-alt"></i> Pinjaman Sehingga 15 Tahun
+                    </div>
+                    <div class="hero-feature-item">
+                        <i class="fas fa-building"></i> GOV & GLC Sahaja
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Features Section -->
+    <section class="features" id="kelebihan">
+        <div class="container">
+            <div class="section-header">
+                <h2>Kenapa Pilih Kami?</h2>
+                <p>Kami memahami masalah kewangan anda. Platform kami direka khas untuk memberikan kelulusan yang lebih mudah berbanding bank biasa.</p>
+            </div>
+
+            <div class="features-grid">
+                <!-- Feature 1 -->
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-user-shield"></i>
+                    </div>
+                    <h3>CTOS, CCRIS & Blacklist</h3>
+                    <p>Mempunyai rekod kewangan yang kurang cantik? Jangan risau, permohonan anda masih boleh dipertimbangkan dan diuruskan sehingga lulus.</p>
+                </div>
+                
+                <!-- Feature 2 -->
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-money-bill-wave"></i>
+                    </div>
+                    <h3>Payout Tinggi (Sehingga 98%)</h3>
+                    <p>Dapatkan lebih banyak tunai di tangan berbanding koperasi lain. Tiada caj tersembunyi yang membebankan anda.</p>
+                </div>
+
+                <!-- Feature 3 -->
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-tachometer-alt"></i>
+                    </div>
+                    <h3>Kelulusan Super Pantas</h3>
+                    <p>Bila dokumen lengkap, kami janjikan proses kelulusan dalam masa 48 jam bekerja sahaja. Duit terus masuk ke akaun anda.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Eligibility Section -->
+    <section class="eligibility">
+        <div class="container">
+            <div class="el-content">
+                <div class="el-text">
+                    <h2>Siapa Yang Layak Memohon?</h2>
+                    <p>Pinjaman ini dikhaskan untuk sektor kerajaan dan badan berkanun terpilih untuk memudahkan potongan melalui Biro ANGKASA.</p>
+                    
+                    <ul class="checklist">
+                        <li><i class="fas fa-check"></i> Kakitangan Kerajaan (Persekutuan/Negeri) & GLC</li>
+                        <li><i class="fas fa-check"></i> Jawatan Tetap & Kontrak Layak Memohon</li>
+                        <li><i class="fas fa-check"></i> Syarat Baki Gaji Bersih Serendah 40%</li>
+                    </ul>
+
+                    <a href="https://wa.me/60175053408?text=Hai,%20saya%20kakitangan%20kerajaan/GLC%20dan%20ingin%20semak%20kelayakan" class="btn btn-primary" target="_blank">
+                        Tanya Penasihat Kami
+                    </a>
+                </div>
+                <div class="el-image">
+                    <div class="el-image-inner">
+                        <h3>Overlap (Penyatuan Hutang)</h3>
+                        <p>Tutup hutang lama yang tinggi faedah, kurangkan komitmen bulanan anda, dan bawa pulang baki tunai yang selesa.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Call to Action Section -->
+    <section class="cta-section">
+        <div class="container">
+            <h2>Jangan Biarkan Masalah Kewangan Membelenggu Anda</h2>
+            <p>Biar kami bantu anda kira kelayakan secara PERCUMA tanpa sebarang komitmen. Pegawai kami sedia membantu memberikan nasihat terbaik.</p>
+            <a href="https://wa.me/60175053408?text=Hai%20PinjamanKoperasi2U,%20saya%20ingin%20memohon" class="btn btn-primary btn-whatsapp" style="font-size: 1.3rem; padding: 18px 40px;" target="_blank">
+                <i class="fab fa-whatsapp"></i> WhatsApp Sekarang
+            </a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <p>&copy; 2026 PinjamanKoperasi2U.my - Hak Cipta Terpelihara.</p>
+            <p style="font-size: 0.8rem; opacity: 0.7; max-width: 800px; margin: 10px auto 0;">Penafian: Kami adalah agensi pemasaran rasmi untuk koperasi-koperasi terkemuka di Malaysia. Kelulusan adalah tertakluk kepada terma dan syarat koperasi yang membiayai.</p>
+        </div>
+    </footer>
+
+    <!-- Floating WhatsApp Button -->
+    <a href="https://wa.me/60175053408?text=Hai%20PinjamanKoperasi2U,%20saya%20perlukan%20bantuan%20pinjaman" class="whatsapp-float" target="_blank" aria-label="WhatsApp Us">
+        <i class="fab fa-whatsapp"></i>
+        <span>Hubungi Kami</span>
+    </a>
+
+</body>
+</html>
